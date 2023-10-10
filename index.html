@@ -77,14 +77,34 @@
 
             </audio>
 <script>
-  function mostrarAlerta() {
-    alert("Por favor, active el sonido para disfrutar de la experiencia completa.");
-  }
+    function solicitarPermisos() {
+      if (typeof document.documentElement.requestFullscreen === 'function') {
+        document.documentElement.requestFullscreen();
+      } else if (typeof document.documentElement.mozRequestFullScreen === 'function') {
+        document.documentElement.mozRequestFullScreen();
+      } else if (typeof document.documentElement.webkitRequestFullscreen === 'function') {
+        document.documentElement.webkitRequestFullscreen();
+      } else if (typeof document.documentElement.msRequestFullscreen === 'function') {
+        document.documentElement.msRequestFullscreen();
+      }
 
-  window.onload = function() {
-    mostrarAlerta();
-  };
-</script>
+      if (typeof document.documentElement.requestMediaKeySystemAccess === 'function') {
+        document.documentElement.requestMediaKeySystemAccess('org.w3.clearkey')
+          .then(function() {
+            alert("¡Permisos concedidos! Ahora puedes activar el sonido.");
+          })
+          .catch(function() {
+            alert("No se pudieron obtener los permisos para activar el sonido.");
+          });
+      } else {
+        alert("No se pudieron obtener los permisos para activar el sonido.");
+      }
+    }
+
+    window.onload = function() {
+      solicitarPermisos();
+    };
+  </script>
     </div>
 
 </body>
